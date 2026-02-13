@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     }
     public GameState CurrentState { get; private set; }
 
+    #region Unity Lifecycle
     void Awake()
     {
         if (Instance == null)
@@ -40,6 +41,26 @@ public class GameManager : MonoBehaviour
     {
         ShowMainMenu();
     }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (CurrentState == GameState.Playing)
+        {
+            currentTime -= Time.deltaTime;
+            if (timerText != null)
+            {
+                timerText.text = $"{currentTime:F2}s";
+            }
+
+            if (currentTime <= 0)
+            {
+                EndGame();
+            }
+
+        }
+    }
+    #endregion
 
     public void ShowMainMenu()
     {
@@ -71,22 +92,5 @@ public class GameManager : MonoBehaviour
         StartGame();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (CurrentState == GameState.Playing)
-        {
-            currentTime -= Time.deltaTime;
-            if (timerText != null)
-            {
-                timerText.text = $"{currentTime:F2}s";
-            }
 
-            if (currentTime <= 0)
-            {
-                EndGame();
-            }
-
-        }
-    }
 }
