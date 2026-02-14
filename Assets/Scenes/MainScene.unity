@@ -3048,6 +3048,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1673903998}
   - component: {fileID: 1673903997}
+  - component: {fileID: 1673903999}
   m_Layer: 0
   m_Name: Gameplay
   m_TagString: Untagged
@@ -3084,6 +3085,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1673903999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673903996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9af5a359c1448a44ab4ebe4d305b34aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableMouseInput: 1
+  enableTouchInput: 1
+  enableKeyboardDebug: 1
+  enableDebugLogs: 1
+  minSwipeDistance: 50
 --- !u!1 &1675229980
 GameObject:
   m_ObjectHideFlags: 0
@@ -3295,6 +3313,7 @@ GameObject:
   - component: {fileID: 1789125140}
   - component: {fileID: 1789125139}
   - component: {fileID: 1789125141}
+  - component: {fileID: 1789125142}
   m_Layer: 0
   m_Name: GameSystem
   m_TagString: Untagged
@@ -3343,6 +3362,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameDuration: 60
+--- !u!114 &1789125142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1789125138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71a3ba82d270324aad3c5b5ba7eea58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stateController: {fileID: 1789125141}
+  inputController: {fileID: 1673903999}
 --- !u!1 &1878015200
 GameObject:
   m_ObjectHideFlags: 0

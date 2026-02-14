@@ -32,42 +32,9 @@ public class BallController : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void ThrowPerfectBall()
     {
-        if (stateController != null && stateController.CurrentState != GameStateController.GameState.Playing)
-        {
-            return;
-        }
-
-        HandleInput();
-    }
-
-    private void HandleInput()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ThrowPerfectBall();
-        } 
-
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            ThrowNotPerfectBall();
-        }
-
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            ThrowMissBall();
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            ResetBall();
-        }
-    }
-
-    private void ThrowPerfectBall()
-    {
-        if (trajectoryCalculator != null)
+        if (trajectoryCalculator != null && ballRigidbody != null)
         {
             Vector3 velocity = trajectoryCalculator.CalculateShotVelocity(transform.position, TrajectoryCalculator.ShotType.Perfect);
             ballRigidbody.velocity = Vector3.zero; // Reset velocity before applying new force
@@ -76,9 +43,9 @@ public class BallController : MonoBehaviour
         }
     }
 
-    private void ThrowNotPerfectBall()
+    public void ThrowNotPerfectBall()
     {
-        if (trajectoryCalculator != null)
+        if (trajectoryCalculator != null && ballRigidbody != null)
         {
             Vector3 velocity = trajectoryCalculator.CalculateShotVelocity(transform.position, TrajectoryCalculator.ShotType.NotPerfect);
             ballRigidbody.velocity = Vector3.zero; // Reset velocity before applying new force
@@ -87,9 +54,9 @@ public class BallController : MonoBehaviour
         }
     }
 
-    private void ThrowMissBall()
+    public void ThrowMissBall()
     {
-        if (trajectoryCalculator != null)
+        if (trajectoryCalculator != null && ballRigidbody != null)
         {
             Vector3 velocity = trajectoryCalculator.CalculateShotVelocity(transform.position, TrajectoryCalculator.ShotType.Miss);
             ballRigidbody.velocity = Vector3.zero; // Reset velocity before applying new force
