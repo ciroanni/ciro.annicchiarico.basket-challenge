@@ -3314,6 +3314,7 @@ GameObject:
   - component: {fileID: 1789125139}
   - component: {fileID: 1789125141}
   - component: {fileID: 1789125142}
+  - component: {fileID: 1789125143}
   m_Layer: 0
   m_Name: GameSystem
   m_TagString: Untagged
@@ -3376,6 +3377,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stateController: {fileID: 1789125141}
   inputController: {fileID: 1673903999}
+--- !u!114 &1789125143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1789125138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18616cbfd66df244d842d0813605f9c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballController: {fileID: 1215412358}
+  inputController: {fileID: 1673903999}
+  longSwipeThreshold: 250
 --- !u!1 &1878015200
 GameObject:
   m_ObjectHideFlags: 0
