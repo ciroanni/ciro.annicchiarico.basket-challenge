@@ -6,6 +6,8 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private GameObject mainMenuUI;
     [SerializeField] private GameObject gameplayUI;
     [SerializeField] private GameObject gameOverUI;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI finalScoreText;
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private GameStateController stateController;
 
@@ -16,6 +18,11 @@ public class GameUIController : MonoBehaviour
             stateController.OnStateChanged += HandleStateChanged;
             stateController.OnTimeChanged += HandleTimeChanged;
         }
+
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.OnScoreChanged += HandleScoreChanged;
+        }
     }
 
     private void Start()
@@ -23,6 +30,11 @@ public class GameUIController : MonoBehaviour
         if (stateController != null)
         {
             HandleStateChanged(stateController.CurrentState);
+        }
+
+        if (ScoreManager.Instance != null)
+        {
+            HandleScoreChanged(ScoreManager.Instance.GetScore());
         }
     }
 
@@ -32,6 +44,11 @@ public class GameUIController : MonoBehaviour
         {
             stateController.OnStateChanged -= HandleStateChanged;
             stateController.OnTimeChanged -= HandleTimeChanged;
+        }
+
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.OnScoreChanged -= HandleScoreChanged;
         }
     }
 
@@ -51,6 +68,12 @@ public class GameUIController : MonoBehaviour
         {
             gameOverUI.SetActive(state == GameStateController.GameState.GameOver);
         }
+
+        if (state == GameStateController.GameState.GameOver)
+        {
+            UpdateFinalScore();
+        }
+
     }
 
     private void HandleTimeChanged(float timeRemaining)
@@ -59,5 +82,23 @@ public class GameUIController : MonoBehaviour
         {
             timerText.text = $"{timeRemaining:F2}s";
         }
+    }
+
+    private void HandleScoreChanged(int newScore)
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = newScore.ToString();
+        }
+    }
+
+    private void UpdateFinalScore()
+    {
+        if (finalScoreText == null || ScoreManager.Instance == null)
+        {
+            return;
+        }
+
+        finalScoreText.text = ScoreManager.Instance.GetScore().ToString();
     }
 }

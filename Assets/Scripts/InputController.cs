@@ -123,7 +123,7 @@ public class InputController : MonoBehaviour
             {
                 Debug.Log("Keyboard swipe long (M)");
             }
-            OnSwipe?.Invoke(Vector2.up * minSwipeDistance * 2f);
+            OnSwipe?.Invoke(Vector2.up * minSwipeDistance * 5f);
         }
 
         if (Input.GetKeyDown(KeyCode.R))
