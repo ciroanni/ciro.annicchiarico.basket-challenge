@@ -40,6 +40,16 @@ public class TrajectoryCalculator : MonoBehaviour
         return CalculateArcVelocity(startPoint, targetPoint);
     }
 
+    public Vector3 CalculateIdealVelocityToHoop(Vector3 startPoint)
+    {
+        if (hoopCenter == null)
+        {
+            return Vector3.zero;
+        }
+
+        return CalculateArcVelocity(startPoint, hoopCenter.position);
+    }
+
     public Vector3 CalculateArcVelocity(Vector3 start, Vector3 target)
     {
         // horizontal distance (XZ plane)
@@ -48,7 +58,7 @@ public class TrajectoryCalculator : MonoBehaviour
         float distance = Vector3.Distance(startXZ, targetXZ);
 
         // desired height offset for the arc (the higher the distance, the higher the arc)
-        float heightOffset = 2.0f + (distance * 0.5f);
+        float heightOffset = 2.0f + (distance * 0.3f);
         // calculate the maximum height of the arc
         float maxY = Mathf.Max(start.y, target.y) + heightOffset;
 

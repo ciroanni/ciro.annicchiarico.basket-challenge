@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +6,7 @@ public class PointTrigger : MonoBehaviour
 {
     [SerializeField] private ShotEvaluator shotEvaluator;
     private readonly HashSet<Rigidbody> scoredBodies = new HashSet<Rigidbody>();
+    public event Action<Rigidbody> OnShotScored;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -27,14 +28,16 @@ public class PointTrigger : MonoBehaviour
 
                 ShotContext shotContext = rb.GetComponent<ShotContext>();
                 TrajectoryCalculator.ShotType shotType = TrajectoryCalculator.ShotType.NotPerfect;
-                if (shotContext != null)
+                if (shotContext != null && !shotContext.TouchedRim)
                 {
-                    shotType = shotContext.LastShotType;
+                    shotType = TrajectoryCalculator.ShotType.Perfect;
                 }
 
                 scoredBodies.Add(rb);
                 ShotEvaluator.ShotResult result = shotEvaluator.Evaluate(shotType);
+                Debug.Log($"Shot scored! Type: {shotType}, Points: {result.Points}");
                 ScoreManager.Instance?.AddPoints(result.Points);
+                OnShotScored?.Invoke(rb);
             }
         }
     }

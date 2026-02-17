@@ -10,12 +10,18 @@ public class InputController : MonoBehaviour
     [SerializeField] private bool enableDebugLogs = true;
     [SerializeField] private float minSwipeDistance = 50f;
 
-    public event Action<Vector2> OnTap;
-    public event Action<Vector2> OnSwipe;
+    public event Action<Vector2, float> OnSwipe;
     public event Action OnReset;
+
+    # region Debug events
+    public event Action OnPerfectThrow;
+    public event Action OnNotPerfectThrow;
+    public event Action OnMissThrow;
+    # endregion
 
     private bool pointerDown;
     private Vector2 pointerStart;
+    private float pointerStartTime;
     private bool pointerStartedOverUI;
 
     private void Update()
@@ -45,6 +51,7 @@ public class InputController : MonoBehaviour
             case TouchPhase.Began:
                 pointerDown = true;
                 pointerStart = touch.position;
+                pointerStartTime = Time.time;
                 pointerStartedOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId);
                 if (enableDebugLogs)
                 {
@@ -75,6 +82,7 @@ public class InputController : MonoBehaviour
         {
             pointerDown = true;
             pointerStart = Input.mousePosition;
+            pointerStartTime = Time.time;
             pointerStartedOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
             if (enableDebugLogs)
             {
@@ -105,7 +113,7 @@ public class InputController : MonoBehaviour
             {
                 Debug.Log("Keyboard tap (Space)");
             }
-            OnTap?.Invoke(Vector2.zero);
+            OnPerfectThrow?.Invoke();
         }
 
         if (Input.GetKeyDown(KeyCode.N))
@@ -114,7 +122,7 @@ public class InputController : MonoBehaviour
             {
                 Debug.Log("Keyboard swipe (N)");
             }
-            OnSwipe?.Invoke(Vector2.up * minSwipeDistance);
+            OnNotPerfectThrow?.Invoke();
         }
 
         if (Input.GetKeyDown(KeyCode.M))
@@ -123,7 +131,7 @@ public class InputController : MonoBehaviour
             {
                 Debug.Log("Keyboard swipe long (M)");
             }
-            OnSwipe?.Invoke(Vector2.up * minSwipeDistance * 5f);
+            OnMissThrow?.Invoke();
         }
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -144,6 +152,7 @@ public class InputController : MonoBehaviour
         }
 
         Vector2 delta = endPosition - pointerStart;
+        float duration = Mathf.Max(Time.time - pointerStartTime, 0.01f);
         pointerDown = false;
 
         if (delta.magnitude >= minSwipeDistance)
@@ -152,15 +161,7 @@ public class InputController : MonoBehaviour
             {
                 Debug.Log("Swipe detected");
             }
-            OnSwipe?.Invoke(delta);
-        }
-        else
-        {
-            if (enableDebugLogs)
-            {
-                Debug.Log("Tap detected");
-            }
-            OnTap?.Invoke(endPosition);
+            OnSwipe?.Invoke(delta, duration);
         }
     }
 }

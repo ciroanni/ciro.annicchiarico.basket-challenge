@@ -1,16 +1,18 @@
+using System;
 using UnityEngine;
 
 public class BallInputBinder : MonoBehaviour
 {
     [SerializeField] private BallController ballController;
     [SerializeField] private InputController inputController;
-    [SerializeField] private float longSwipeThreshold = 250f;
 
     private void OnEnable()
     {
         if (inputController != null)
         {
-            inputController.OnTap += HandleTap;
+            inputController.OnPerfectThrow += HandlePerfectThrow;
+            inputController.OnNotPerfectThrow += HandleNotPerfectThrow;
+            inputController.OnMissThrow += HandleMissThrow;
             inputController.OnSwipe += HandleSwipe;
             inputController.OnReset += HandleReset;
         }
@@ -20,35 +22,52 @@ public class BallInputBinder : MonoBehaviour
     {
         if (inputController != null)
         {
-            inputController.OnTap -= HandleTap;
+            inputController.OnPerfectThrow -= HandlePerfectThrow;
+            inputController.OnNotPerfectThrow -= HandleNotPerfectThrow;
+            inputController.OnMissThrow -= HandleMissThrow;
             inputController.OnSwipe -= HandleSwipe;
             inputController.OnReset -= HandleReset;
         }
     }
 
-    private void HandleTap(Vector2 screenPosition)
-    {
-        if (ballController != null)
-        {
-            ballController.ThrowPerfectBall();
-        }
-    }
-
-    private void HandleSwipe(Vector2 swipeDelta)
+    private void HandlePerfectThrow()
     {
         if (ballController == null)
         {
             return;
         }
 
-        if (swipeDelta.magnitude >= longSwipeThreshold)
+        ballController.ThrowPerfectBall();
+    }
+
+    private void HandleMissThrow()
+    {
+        if (ballController == null)
         {
-            ballController.ThrowMissBall();
+            return;
         }
-        else
+
+        ballController.ThrowMissBall();
+    }
+
+    private void HandleNotPerfectThrow()
+    {
+        if (ballController == null)
         {
-            ballController.ThrowNotPerfectBall();
+            return;
         }
+
+        ballController.ThrowNotPerfectBall();
+    }
+
+    private void HandleSwipe(Vector2 swipeDelta, float swipeDuration)
+    {
+        if (ballController == null)
+        {
+            return;
+        }
+
+        ballController.ThrowFromSwipe(swipeDelta, swipeDuration);
     }
 
     private void HandleReset()
