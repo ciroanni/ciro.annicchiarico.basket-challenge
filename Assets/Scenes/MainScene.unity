@@ -506,6 +506,7 @@ GameObject:
   - component: {fileID: 227727852}
   - component: {fileID: 227727851}
   - component: {fileID: 227727850}
+  - component: {fileID: 227727853}
   m_Layer: 0
   m_Name: Backboard_collider
   m_TagString: Backboard
@@ -592,6 +593,30 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 227727848}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &227727853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 227727848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cc1942a5813e634595321ff8e2af8bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backboardRenderers:
+  - {fileID: 854111603}
+  highlightColor: {r: 1, g: 0.85, b: 0.2, a: 1}
+  blinkInterval: 0.25
+  activeDuration: 10
+  minSpawnDelay: 3
+  maxSpawnDelay: 25
+  rareChance: 0.2
+  veryRareChance: 0.05
+  commonPoints: 4
+  rarePoints: 6
+  veryRarePoints: 8
 --- !u!1 &276029441
 GameObject:
   m_ObjectHideFlags: 0
@@ -2001,6 +2026,11 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.430607, y: 0.33919358, z: 1.3530825}
   m_Center: {x: -0.03133297, y: 0.16959679, z: -0.00075650215}
+--- !u!23 &854111603 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7420462909982909192, guid: 9666b70b32f4ef74799be8938aa49563, type: 3}
+  m_PrefabInstance: {fileID: 2473680863525970857}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &869528318
 GameObject:
   m_ObjectHideFlags: 0
@@ -4277,6 +4307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shotEvaluator: {fileID: 1789125144}
+  backboardBonus: {fileID: 227727853}
 --- !u!65 &1992190881
 BoxCollider:
   m_ObjectHideFlags: 0

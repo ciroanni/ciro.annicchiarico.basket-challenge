@@ -5,6 +5,7 @@ using UnityEngine;
 public class PointTrigger : MonoBehaviour
 {
     [SerializeField] private ShotEvaluator shotEvaluator;
+    [SerializeField] private BackboardBonusController backboardBonus;
     private readonly HashSet<Rigidbody> scoredBodies = new HashSet<Rigidbody>();
     public event Action<Rigidbody> OnShotScored;
 
@@ -37,6 +38,16 @@ public class PointTrigger : MonoBehaviour
                 ShotEvaluator.ShotResult result = shotEvaluator.Evaluate(shotType);
                 Debug.Log($"Shot scored! Type: {shotType}, Points: {result.Points}");
                 ScoreManager.Instance?.AddPoints(result.Points);
+
+                if (shotContext != null && shotContext.TouchedBackboard && backboardBonus != null)
+                {
+                    if (backboardBonus.TryConsumeBonus(out int bonusPoints))
+                    {
+                        Debug.Log($"Backboard bonus awarded: {bonusPoints}");
+                        ScoreManager.Instance?.AddPoints(bonusPoints);
+                    }
+                }
+
                 OnShotScored?.Invoke(rb);
             }
         }
