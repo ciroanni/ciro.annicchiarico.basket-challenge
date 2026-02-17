@@ -1285,6 +1285,7 @@ GameObject:
   - component: {fileID: 425529199}
   - component: {fileID: 425529198}
   - component: {fileID: 425529197}
+  - component: {fileID: 425529200}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1351,13 +1352,30 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 425529196}
   m_LocalRotation: {x: 0.13537557, y: -0, z: -0, w: 0.99079436}
-  m_LocalPosition: {x: 0, y: 5, z: -4.08}
+  m_LocalPosition: {x: 0, y: 6.51, z: -14.972}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1713183616047507641}
-  m_RootOrder: 3
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 15.561, y: 0, z: 0}
+--- !u!114 &425529200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 425529196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 237fa7a35a3e3554e802372407a5a62f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1215412367}
+  ball: {fileID: 1215412358}
+  followOffset: {x: 0, y: 5, z: -8}
+  lookAtOffset: {x: 0, y: 1, z: 0}
+  positionSmoothTime: 0.15
 --- !u!1 &438852127
 GameObject:
   m_ObjectHideFlags: 0
@@ -2807,6 +2825,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rimTag: Rim
   backboardTag: Backboard
+--- !u!4 &1215412367 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1744604829253241628, guid: 3ae6965208a16214ab991aec68848214, type: 3}
+  m_PrefabInstance: {fileID: 3481782800757474422}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1227245496
 GameObject:
   m_ObjectHideFlags: 0
@@ -4092,7 +4115,7 @@ GameObject:
   - component: {fileID: 1878015201}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4236,7 +4259,7 @@ GameObject:
   - component: {fileID: 1992190880}
   m_Layer: 0
   m_Name: PointTrigger
-  m_TagString: Untagged
+  m_TagString: Point
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4655,7 +4678,6 @@ Transform:
   - {fileID: 8154053355635289074}
   - {fileID: 8106861019199923154}
   - {fileID: 6012958815040757508}
-  - {fileID: 425529199}
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4891,6 +4913,10 @@ PrefabInstance:
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 13400000, guid: e443452e813aac94080157b6f46c3445, type: 2}
+    - target: {fileID: 8262116461933741032, guid: 3ae6965208a16214ab991aec68848214, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ae6965208a16214ab991aec68848214, type: 3}
 --- !u!23 &3616360499094420647

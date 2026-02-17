@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
 
 public class BallController : MonoBehaviour
@@ -28,6 +28,10 @@ public class BallController : MonoBehaviour
     private bool awaitingResult;
     private Coroutine resultCoroutine;
     private Coroutine returnCoroutine;
+
+    public bool IsInFlight => isInFlight;
+    public event Action OnShotLaunched;
+    public event Action OnShotResolved;
 
     private void Awake()
     {
@@ -126,6 +130,7 @@ public class BallController : MonoBehaviour
 
         isInFlight = false;
         awaitingResult = false;
+        OnShotLaunched?.Invoke(); // just to notify camere to restart following
         currentPositionIndex = GetRandomPositionIndex(-1);
         MovePlayerToCurrentPosition();
         AttachToHand();
@@ -135,6 +140,7 @@ public class BallController : MonoBehaviour
     {
         isInFlight = true;
         awaitingResult = true;
+        OnShotLaunched?.Invoke();
         shotContext?.BeginShot();
         transform.SetParent(null);
         ballRigidbody.isKinematic = false;
@@ -168,6 +174,7 @@ public class BallController : MonoBehaviour
     {
         yield return new WaitForSeconds(returnDelay);
         isInFlight = false;
+        OnShotLaunched?.Invoke();
         AdvancePosition();
         MovePlayerToCurrentPosition();
         AttachToHand();
@@ -234,7 +241,7 @@ public class BallController : MonoBehaviour
         int index = excludeIndex;
         while (index == excludeIndex)
         {
-            index = Random.Range(0, shootingPositions.Length);
+            index = UnityEngine.Random.Range(0, shootingPositions.Length);
         }
 
         return index;
@@ -285,6 +292,7 @@ public class BallController : MonoBehaviour
         }
 
         awaitingResult = false;
+        OnShotResolved?.Invoke();
         if (resultCoroutine != null)
         {
             StopCoroutine(resultCoroutine);
@@ -297,5 +305,13 @@ public class BallController : MonoBehaviour
         }
 
         returnCoroutine = StartCoroutine(ReturnToHandAfterDelay());
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Rim") || collision.gameObject.CompareTag("Backboard") || collision.gameObject.CompareTag("Ground"))
+        {
+            OnShotResolved?.Invoke();
+        }
     }
 }

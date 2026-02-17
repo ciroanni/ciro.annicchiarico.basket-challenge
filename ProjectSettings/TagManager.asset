@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Rim
   - Backboard
+  - Point
+  - Ground
   layers:
   - Default
   - TransparentFX
