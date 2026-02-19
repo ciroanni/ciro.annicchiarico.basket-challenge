@@ -10,6 +10,7 @@ public class BackboardBonusController : MonoBehaviour
         VeryRare
     }
 
+    [SerializeField] private GameStateController stateController;
     [SerializeField] private Renderer[] backboardRenderers;
     [SerializeField] private Color highlightColor = new Color(1f, 0.85f, 0.2f, 1f);
     [SerializeField] private float blinkInterval = 0.25f;
@@ -42,6 +43,12 @@ public class BackboardBonusController : MonoBehaviour
         if (ScoreManager.Instance != null)
         {
             ScoreManager.Instance.OnScoreChanged -= HandleScoreChanged;
+            ScoreManager.Instance.OnScoreReset -= HandleScoreReset;
+        }
+
+        if (stateController != null)
+        {
+            stateController.OnGameEnd -= HandleGameEnd;
         }
 
         StopAllCoroutines();
@@ -55,12 +62,18 @@ public class BackboardBonusController : MonoBehaviour
         {
             lastScore = ScoreManager.Instance.GetScore();
             ScoreManager.Instance.OnScoreChanged += HandleScoreChanged;
+            ScoreManager.Instance.OnScoreReset += HandleScoreReset;
+        }
+
+        if (stateController != null)
+        {
+            stateController.OnGameEnd += HandleGameEnd;
         }
     }
 
     private void HandleScoreChanged(int newScore)
     {
-        if (newScore <= lastScore)
+        if (newScore < lastScore)
         {
             lastScore = newScore;
             return;
@@ -68,6 +81,18 @@ public class BackboardBonusController : MonoBehaviour
 
         lastScore = newScore;
         ScheduleBonusSpawn();
+    }
+
+    private void HandleScoreReset()
+    {
+        lastScore = 0;
+    }
+
+    private void HandleGameEnd()
+    {
+        StopAllCoroutines();
+        ClearHighlight();
+        bonusActive = false;
     }
 
     private void ScheduleBonusSpawn()

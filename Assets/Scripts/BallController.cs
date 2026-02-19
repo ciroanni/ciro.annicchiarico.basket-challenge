@@ -26,12 +26,14 @@ public class BallController : MonoBehaviour
     private int currentPositionIndex;
     private bool isInFlight;
     private bool awaitingResult;
+    private bool scoredThisShot;
     private Coroutine resultCoroutine;
     private Coroutine returnCoroutine;
 
     public bool IsInFlight => isInFlight;
     public event Action OnShotLaunched;
     public event Action OnShotResolved;
+    public event Action StopFollowing; // to notify camera to stop following to avoid visual bug
 
     private void Awake()
     {
@@ -130,8 +132,9 @@ public class BallController : MonoBehaviour
 
         isInFlight = false;
         awaitingResult = false;
+        scoredThisShot = false;
         OnShotLaunched?.Invoke(); // just to notify camere to restart following
-        currentPositionIndex = GetRandomPositionIndex(-1);
+        AdvancePosition();
         MovePlayerToCurrentPosition();
         AttachToHand();
     }
@@ -140,6 +143,7 @@ public class BallController : MonoBehaviour
     {
         isInFlight = true;
         awaitingResult = true;
+        scoredThisShot = false;
         OnShotLaunched?.Invoke();
         shotContext?.BeginShot();
         transform.SetParent(null);
@@ -175,7 +179,10 @@ public class BallController : MonoBehaviour
         yield return new WaitForSeconds(returnDelay);
         isInFlight = false;
         OnShotLaunched?.Invoke();
-        AdvancePosition();
+        if (scoredThisShot)
+        {
+            AdvancePosition();
+        }
         MovePlayerToCurrentPosition();
         AttachToHand();
         returnCoroutine = null;
@@ -281,6 +288,7 @@ public class BallController : MonoBehaviour
             return;
         }
 
+        scoredThisShot = true;
         HandleShotResult();
     }
 
@@ -311,7 +319,7 @@ public class BallController : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Rim") || collision.gameObject.CompareTag("Backboard") || collision.gameObject.CompareTag("Ground"))
         {
-            OnShotResolved?.Invoke();
+            StopFollowing?.Invoke();
         }
     }
 }

@@ -8,6 +8,7 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private GameStateController stateController;
 
     public event Action<int> OnScoreChanged;
+    public event Action OnScoreReset;
 
     private int score;
 
@@ -53,6 +54,7 @@ public class ScoreManager : MonoBehaviour
     {
         score = 0;
         OnScoreChanged?.Invoke(score);
+        OnScoreReset?.Invoke();
     }
 
     public int GetScore()

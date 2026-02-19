@@ -27,6 +27,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SetGameDuration(float durationSeconds)
+    {
+        if (stateController != null)
+        {
+            stateController.SetGameDuration(durationSeconds);
+        }
+    }
+
     public void EndGame()
     {
         if (stateController != null)
