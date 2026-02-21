@@ -34,8 +34,13 @@ public class ScoreFlyerSpawner : MonoBehaviour
         }
     }
 
-    private void HandleShotScored(ShotEvaluator.ShotResult result)
+    private void HandleShotScored(ShotEvaluator.ShotResult result, ShotContext.ShooterType shooter)
     {
+        if (shooter == ShotContext.ShooterType.Opponent)
+        {
+            return;
+        }
+
         if (result.Points <= 0)
         {
             return;
@@ -45,8 +50,13 @@ public class ScoreFlyerSpawner : MonoBehaviour
         SpawnFlyer(result.Label, color);
     }
 
-    private void HandleBonusScored(int bonusPoints)
+    private void HandleBonusScored(int bonusPoints, ShotContext.ShooterType shooter)
     {
+        if (shooter == ShotContext.ShooterType.Opponent)
+        {
+            return;
+        }
+
         if (bonusPoints <= 0)
         {
             return;

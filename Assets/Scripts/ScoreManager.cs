@@ -8,9 +8,12 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private GameStateController stateController;
 
     public event Action<int> OnScoreChanged;
+    public event Action<int> OnOpponentScoreChanged;
     public event Action OnScoreReset;
+    public event Action OnScoresReset;
 
     private int score;
+    private int opponentScore;
 
     private void Awake()
     {
@@ -41,13 +44,26 @@ public class ScoreManager : MonoBehaviour
 
     private void HandleGameStart()
     {
-        ResetScore();
+        ResetScores();
+    }
+
+    public void AddPoints(ShotContext.ShooterType shooter, int points)
+    {
+        if (shooter == ShotContext.ShooterType.Opponent)
+        {
+            opponentScore += points;
+            OnOpponentScoreChanged?.Invoke(opponentScore);
+        }
+        else
+        {
+            score += points;
+            OnScoreChanged?.Invoke(score);
+        }
     }
 
     public void AddPoints(int points)
     {
-        score += points;
-        OnScoreChanged?.Invoke(score);
+        AddPoints(ShotContext.ShooterType.Player, points);
     }
 
     public void ResetScore()
@@ -57,8 +73,23 @@ public class ScoreManager : MonoBehaviour
         OnScoreReset?.Invoke();
     }
 
+    public void ResetScores()
+    {
+        score = 0;
+        opponentScore = 0;
+        OnScoreChanged?.Invoke(score);
+        OnOpponentScoreChanged?.Invoke(opponentScore);
+        OnScoreReset?.Invoke();
+        OnScoresReset?.Invoke();
+    }
+
     public int GetScore()
     {
         return score;
+    }
+
+    public int GetOpponentScore()
+    {
+        return opponentScore;
     }
 }

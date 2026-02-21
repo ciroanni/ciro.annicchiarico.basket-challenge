@@ -7,8 +7,14 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private GameObject gameplayUI;
     [SerializeField] private GameObject gameOverUI;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI opponentScoreText;
     [SerializeField] private TextMeshProUGUI finalScoreText;
+    [SerializeField] private TextMeshProUGUI finalOpponentScoreText;
     [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI finalResultText;
+    [SerializeField] private Color winColor = new Color(0.2f, 0.8f, 0.3f, 1f);
+    [SerializeField] private Color loseColor = new Color(0.9f, 0.2f, 0.2f, 1f);
+    [SerializeField] private Color drawColor = new Color(0.95f, 0.8f, 0.2f, 1f);
     [SerializeField] private GameStateController stateController;
 
     private void OnEnable()
@@ -22,6 +28,7 @@ public class GameUIController : MonoBehaviour
         if (ScoreManager.Instance != null)
         {
             ScoreManager.Instance.OnScoreChanged += HandleScoreChanged;
+            ScoreManager.Instance.OnOpponentScoreChanged += HandleOpponentScoreChanged;
         }
     }
 
@@ -35,6 +42,7 @@ public class GameUIController : MonoBehaviour
         if (ScoreManager.Instance != null)
         {
             HandleScoreChanged(ScoreManager.Instance.GetScore());
+            HandleOpponentScoreChanged(ScoreManager.Instance.GetOpponentScore());
         }
     }
 
@@ -49,6 +57,7 @@ public class GameUIController : MonoBehaviour
         if (ScoreManager.Instance != null)
         {
             ScoreManager.Instance.OnScoreChanged -= HandleScoreChanged;
+            ScoreManager.Instance.OnOpponentScoreChanged -= HandleOpponentScoreChanged;
         }
     }
 
@@ -72,6 +81,7 @@ public class GameUIController : MonoBehaviour
         if (state == GameStateController.GameState.GameOver)
         {
             UpdateFinalScore();
+            UpdateFinalResult();
         }
 
     }
@@ -92,6 +102,14 @@ public class GameUIController : MonoBehaviour
         }
     }
 
+    private void HandleOpponentScoreChanged(int newScore)
+    {
+        if (opponentScoreText != null)
+        {
+            opponentScoreText.text = newScore.ToString();
+        }
+    }
+
     private void UpdateFinalScore()
     {
         if (finalScoreText == null || ScoreManager.Instance == null)
@@ -100,5 +118,40 @@ public class GameUIController : MonoBehaviour
         }
 
         finalScoreText.text = ScoreManager.Instance.GetScore().ToString();
+
+        if (finalOpponentScoreText != null)
+        {
+            finalOpponentScoreText.text = ScoreManager.Instance.GetOpponentScore().ToString();
+        }
     }
+
+    private void UpdateFinalResult()
+    {
+        if (finalResultText == null || ScoreManager.Instance == null)
+        {
+            return;
+        }
+
+        int playerScore = ScoreManager.Instance.GetScore();
+        int opponentScore = ScoreManager.Instance.GetOpponentScore();
+
+        if (playerScore > opponentScore)
+        {
+            finalResultText.text = "You Win!";
+            finalResultText.color = winColor;
+        }
+        else if (playerScore < opponentScore)
+        {
+            finalResultText.text = "You Lose!";
+            finalResultText.color = loseColor;
+        }
+        else
+        {
+            finalResultText.text = "Draw!";
+            finalResultText.color = drawColor;
+        }
+    }
+
+
+
 }

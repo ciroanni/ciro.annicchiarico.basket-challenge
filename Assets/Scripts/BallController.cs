@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BallController : MonoBehaviour
@@ -31,12 +32,14 @@ public class BallController : MonoBehaviour
     private Coroutine returnCoroutine;
 
     public bool IsInFlight => isInFlight;
+    public bool IsAwaitingResult => awaitingResult;
     public float MinSwipeLength => minSwipeLength;
     public float MaxSwipeLength => maxSwipeLength;
     public float MinSwipeSpeed => minSwipeSpeed;
     public float MaxSwipeSpeed => maxSwipeSpeed;
     public event Action OnShotLaunched;
     public event Action OnShotResolved;
+    public event Action OnResetBall; // to notify camera to start following 
     public event Action StopFollowing; // to notify camera to stop following to avoid visual bug
 
     private void Awake()
@@ -137,7 +140,7 @@ public class BallController : MonoBehaviour
         isInFlight = false;
         awaitingResult = false;
         scoredThisShot = false;
-        OnShotLaunched?.Invoke(); // just to notify camere to restart following
+        OnResetBall?.Invoke();
         AdvancePosition();
         MovePlayerToCurrentPosition();
         AttachToHand();
@@ -182,7 +185,7 @@ public class BallController : MonoBehaviour
     {
         yield return new WaitForSeconds(returnDelay);
         isInFlight = false;
-        OnShotLaunched?.Invoke();
+        OnResetBall?.Invoke();
         if (scoredThisShot)
         {
             AdvancePosition();

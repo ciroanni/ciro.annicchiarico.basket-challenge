@@ -29,7 +29,8 @@ public class BackboardBonusController : MonoBehaviour
     private Coroutine activeCoroutine;
     private bool bonusActive;
     private BonusTier currentTier;
-    private int lastScore;
+    private int lastPlayerScore;
+    private int lastOpponentScore;
 
     public bool IsActive => bonusActive;
 
@@ -44,6 +45,8 @@ public class BackboardBonusController : MonoBehaviour
         {
             ScoreManager.Instance.OnScoreChanged -= HandleScoreChanged;
             ScoreManager.Instance.OnScoreReset -= HandleScoreReset;
+            ScoreManager.Instance.OnOpponentScoreChanged -= HandleOpponentScoreChanged;
+            ScoreManager.Instance.OnScoresReset -= HandleScoresReset;
         }
 
         if (stateController != null)
@@ -60,9 +63,12 @@ public class BackboardBonusController : MonoBehaviour
     {
         if (ScoreManager.Instance != null)
         {
-            lastScore = ScoreManager.Instance.GetScore();
+            lastPlayerScore = ScoreManager.Instance.GetScore();
+            lastOpponentScore = ScoreManager.Instance.GetOpponentScore();
             ScoreManager.Instance.OnScoreChanged += HandleScoreChanged;
             ScoreManager.Instance.OnScoreReset += HandleScoreReset;
+            ScoreManager.Instance.OnOpponentScoreChanged += HandleOpponentScoreChanged;
+            ScoreManager.Instance.OnScoresReset += HandleScoresReset;
         }
 
         if (stateController != null)
@@ -73,19 +79,37 @@ public class BackboardBonusController : MonoBehaviour
 
     private void HandleScoreChanged(int newScore)
     {
-        if (newScore < lastScore)
+        if (newScore < lastPlayerScore)
         {
-            lastScore = newScore;
+            lastPlayerScore = newScore;
             return;
         }
 
-        lastScore = newScore;
+        lastPlayerScore = newScore;
+        ScheduleBonusSpawn();
+    }
+
+    private void HandleOpponentScoreChanged(int newScore)
+    {
+        if (newScore < lastOpponentScore)
+        {
+            lastOpponentScore = newScore;
+            return;
+        }
+
+        lastOpponentScore = newScore;
         ScheduleBonusSpawn();
     }
 
     private void HandleScoreReset()
     {
-        lastScore = 0;
+        lastPlayerScore = 0;
+    }
+
+    private void HandleScoresReset()
+    {
+        lastPlayerScore = 0;
+        lastOpponentScore = 0;
     }
 
     private void HandleGameEnd()

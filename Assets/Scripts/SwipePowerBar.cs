@@ -28,7 +28,7 @@ public class SwipePowerBar : MonoBehaviour
         {
             inputController.OnSwipeProgress += HandleSwipeProgress;
             inputController.OnSwipeStart += HandleSwipeStart;
-            inputController.OnSwipeEnd += HandleSwipeEnd;
+            ballController.OnResetBall += HandleSwipeEnd;
         }
     }
 
@@ -38,7 +38,7 @@ public class SwipePowerBar : MonoBehaviour
         {
             inputController.OnSwipeProgress -= HandleSwipeProgress;
             inputController.OnSwipeStart -= HandleSwipeStart;
-            inputController.OnSwipeEnd -= HandleSwipeEnd;
+            ballController.OnResetBall -= HandleSwipeEnd;
         }
     }
 

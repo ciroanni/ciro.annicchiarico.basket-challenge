@@ -11,7 +11,8 @@ public class GameStateController : MonoBehaviour
     }
 
     [SerializeField] private float gameDuration = 60f;
-    [SerializeField] private BallController ballController;
+    [SerializeField] private BallController playerBallController;
+    [SerializeField] private BallController opponentBallController;
 
     public event Action OnGameStart;
     public event Action OnGameEnd;
@@ -19,23 +20,32 @@ public class GameStateController : MonoBehaviour
     public event Action<float> OnTimeChanged;
 
     public GameState CurrentState { get; private set; }
+    public bool IsAcceptingShots => CurrentState == GameState.Playing && !awaitingFinalShot;
 
     private float currentTime;
     private bool awaitingFinalShot;
 
     private void OnEnable()
     {
-        if (ballController != null)
+        if (playerBallController != null)
         {
-            ballController.OnShotResolved += HandleShotResolved;
+            playerBallController.OnShotResolved += HandleShotResolved;
+        }
+        if (opponentBallController != null)
+        {
+            opponentBallController.OnShotResolved += HandleShotResolved;
         }
     }
 
     private void OnDisable()
     {
-        if (ballController != null)
+        if (playerBallController != null)
         {
-            ballController.OnShotResolved -= HandleShotResolved;
+            playerBallController.OnShotResolved -= HandleShotResolved;
+        }
+        if (opponentBallController != null)
+        {
+            opponentBallController.OnShotResolved -= HandleShotResolved;
         }
     }
 
@@ -68,7 +78,7 @@ public class GameStateController : MonoBehaviour
 
         if (currentTime <= 0f)
         {
-            if (ballController != null && ballController.IsInFlight)
+            if (IsAnyShotPending())
             {
                 awaitingFinalShot = true;
                 return;
@@ -118,8 +128,18 @@ public class GameStateController : MonoBehaviour
             return;
         }
 
-        awaitingFinalShot = false;
-        EndGame();
+        if (!IsAnyShotPending())
+        {
+            awaitingFinalShot = false;
+            EndGame();
+        }
+    }
+
+    private bool IsAnyShotPending()
+    {
+        bool playerPending = playerBallController != null && playerBallController.IsAwaitingResult;
+        bool opponentPending = opponentBallController != null && opponentBallController.IsAwaitingResult;
+        return playerPending || opponentPending;
     }
 
     public void RestartGame()

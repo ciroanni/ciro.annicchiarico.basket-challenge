@@ -2,11 +2,19 @@ using UnityEngine;
 
 public class ShotContext : MonoBehaviour
 {
+    public enum ShooterType
+    {
+        Player,
+        Opponent
+    }
+
     [SerializeField] private string rimTag = "Rim";
     [SerializeField] private string backboardTag = "Backboard";
+    [SerializeField] private ShooterType shooter = ShooterType.Player;
 
     public bool TouchedRim { get; private set; }
     public bool TouchedBackboard { get; private set; }
+    public ShooterType Shooter => shooter;
 
     public void BeginShot()
     {
@@ -28,7 +36,6 @@ public class ShotContext : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(rimTag) && other.CompareTag(rimTag))
         {
-            Debug.Log("Ball touched the rim" + other.name);
             TouchedRim = true;
         }
 
