@@ -11,6 +11,9 @@ public class InputController : MonoBehaviour
     [SerializeField] private float minSwipeDistance = 50f;
 
     public event Action<Vector2, float> OnSwipe;
+    public event Action<Vector2, float> OnSwipeProgress;
+    public event Action OnSwipeStart;
+    public event Action OnSwipeEnd;
     public event Action OnReset;
 
     # region Debug events
@@ -53,15 +56,24 @@ public class InputController : MonoBehaviour
                 pointerStart = touch.position;
                 pointerStartTime = Time.time;
                 pointerStartedOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId);
+                if (!pointerStartedOverUI)
+                {
+                    OnSwipeStart?.Invoke();
+                }
                 if (enableDebugLogs)
                 {
                     Debug.Log("Touch began");
                 }
                 break;
+            case TouchPhase.Moved:
+            case TouchPhase.Stationary:
+                ReportSwipeProgress(touch.position);
+                break;
             case TouchPhase.Ended:
                 if (pointerStartedOverUI)
                 {
                     pointerDown = false;
+                    OnSwipeEnd?.Invoke();
                     return;
                 }
                 if (enableDebugLogs)
@@ -69,9 +81,11 @@ public class InputController : MonoBehaviour
                     Debug.Log("Touch ended");
                 }
                 EvaluateGesture(touch.position);
+                OnSwipeEnd?.Invoke();
                 break;
             case TouchPhase.Canceled:
                 pointerDown = false;
+                OnSwipeEnd?.Invoke();
                 break;
         }
     }
@@ -84,6 +98,10 @@ public class InputController : MonoBehaviour
             pointerStart = Input.mousePosition;
             pointerStartTime = Time.time;
             pointerStartedOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+            if (!pointerStartedOverUI)
+            {
+                OnSwipeStart?.Invoke();
+            }
             if (enableDebugLogs)
             {
                 Debug.Log("Mouse down");
@@ -95,6 +113,7 @@ public class InputController : MonoBehaviour
             if (pointerStartedOverUI)
             {
                 pointerDown = false;
+                OnSwipeEnd?.Invoke();
                 return;
             }
             if (enableDebugLogs)
@@ -102,6 +121,12 @@ public class InputController : MonoBehaviour
                 Debug.Log("Mouse up");
             }
             EvaluateGesture(Input.mousePosition);
+            OnSwipeEnd?.Invoke();
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            ReportSwipeProgress(Input.mousePosition);
         }
     }
 
@@ -163,5 +188,17 @@ public class InputController : MonoBehaviour
             }
             OnSwipe?.Invoke(delta, duration);
         }
+    }
+
+    private void ReportSwipeProgress(Vector2 currentPosition)
+    {
+        if (!pointerDown || pointerStartedOverUI)
+        {
+            return;
+        }
+
+        Vector2 delta = currentPosition - pointerStart;
+        float duration = Mathf.Max(Time.time - pointerStartTime, 0.01f);
+        OnSwipeProgress?.Invoke(delta, duration);
     }
 }

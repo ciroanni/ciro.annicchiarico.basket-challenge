@@ -31,6 +31,10 @@ public class BallController : MonoBehaviour
     private Coroutine returnCoroutine;
 
     public bool IsInFlight => isInFlight;
+    public float MinSwipeLength => minSwipeLength;
+    public float MaxSwipeLength => maxSwipeLength;
+    public float MinSwipeSpeed => minSwipeSpeed;
+    public float MaxSwipeSpeed => maxSwipeSpeed;
     public event Action OnShotLaunched;
     public event Action OnShotResolved;
     public event Action StopFollowing; // to notify camera to stop following to avoid visual bug

@@ -16,6 +16,7 @@ public class BallFollowCamera : MonoBehaviour
         if (ball != null)
         {
             ball.OnShotLaunched += HandleShotLaunched;
+            ball.OnShotResolved += HandleShotResolved;
             ball.StopFollowing += HandleShotResolved;
             followActive = ball.IsInFlight;
         }
@@ -26,6 +27,7 @@ public class BallFollowCamera : MonoBehaviour
         if (ball != null)
         {
             ball.OnShotLaunched -= HandleShotLaunched;
+            ball.OnShotResolved -= HandleShotResolved;
             ball.StopFollowing -= HandleShotResolved;
         }
     }
@@ -40,9 +42,10 @@ public class BallFollowCamera : MonoBehaviour
         if (followActive)
         {
             FollowTarget();
+            LookAtTarget();
         }
 
-        LookAtTarget();
+
 
     }
     private void FollowTarget()

@@ -8,6 +8,8 @@ public class PointTrigger : MonoBehaviour
     [SerializeField] private BackboardBonusController backboardBonus;
     private readonly HashSet<Rigidbody> scoredBodies = new HashSet<Rigidbody>();
     public event Action<Rigidbody> OnShotScored;
+    public event Action<ShotEvaluator.ShotResult> OnShotScoredResult;
+    public event Action<int> OnBonusScored;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -38,6 +40,7 @@ public class PointTrigger : MonoBehaviour
                 ShotEvaluator.ShotResult result = shotEvaluator.Evaluate(shotType);
                 Debug.Log($"Shot scored! Type: {shotType}, Points: {result.Points}");
                 ScoreManager.Instance?.AddPoints(result.Points);
+                OnShotScoredResult?.Invoke(result);
 
                 if (shotContext != null && shotContext.TouchedBackboard && backboardBonus != null)
                 {
@@ -45,6 +48,7 @@ public class PointTrigger : MonoBehaviour
                     {
                         Debug.Log($"Backboard bonus awarded: {bonusPoints}");
                         ScoreManager.Instance?.AddPoints(bonusPoints);
+                        OnBonusScored?.Invoke(bonusPoints);
                     }
                 }
 
