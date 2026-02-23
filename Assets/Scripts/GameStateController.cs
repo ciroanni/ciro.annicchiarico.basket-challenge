@@ -18,12 +18,14 @@ public class GameStateController : MonoBehaviour
     public event Action OnGameEnd;
     public event Action<GameState> OnStateChanged;
     public event Action<float> OnTimeChanged;
+    public event Action OnTimerExpired;
 
     public GameState CurrentState { get; private set; }
     public bool IsAcceptingShots => CurrentState == GameState.Playing && !awaitingFinalShot;
 
     private float currentTime;
     private bool awaitingFinalShot;
+    private bool timerExpiredRaised;
 
     private void OnEnable()
     {
@@ -52,6 +54,7 @@ public class GameStateController : MonoBehaviour
     private void Start()
     {
         currentTime = gameDuration;
+        timerExpiredRaised = false;
         SetState(GameState.Menu);
         OnTimeChanged?.Invoke(currentTime);
     }
@@ -76,6 +79,12 @@ public class GameStateController : MonoBehaviour
 
         OnTimeChanged?.Invoke(currentTime);
 
+        if (currentTime <= 0f && !timerExpiredRaised)
+        {
+            timerExpiredRaised = true;
+            OnTimerExpired?.Invoke();
+        }
+
         if (currentTime <= 0f)
         {
             if (IsAnyShotPending())
@@ -92,6 +101,7 @@ public class GameStateController : MonoBehaviour
     {
         awaitingFinalShot = false;
         currentTime = gameDuration;
+        timerExpiredRaised = false;
         SetState(GameState.Menu);
         OnTimeChanged?.Invoke(currentTime);
     }
@@ -110,6 +120,7 @@ public class GameStateController : MonoBehaviour
     {
         awaitingFinalShot = false;
         currentTime = gameDuration;
+        timerExpiredRaised = false;
         SetState(GameState.Playing);
         OnGameStart?.Invoke();
         OnTimeChanged?.Invoke(currentTime);

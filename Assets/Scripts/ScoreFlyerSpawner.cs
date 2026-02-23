@@ -47,7 +47,8 @@ public class ScoreFlyerSpawner : MonoBehaviour
         }
 
         Color color = result.Label == "Perfect" ? perfectColor : goodColor;
-        SpawnFlyer(result.Label, color);
+        string label = string.IsNullOrEmpty(result.Label) ? "Score" : result.Label;
+        SpawnFlyer($"{label} +{result.Points}", color);
     }
 
     private void HandleBonusScored(int bonusPoints, ShotContext.ShooterType shooter)

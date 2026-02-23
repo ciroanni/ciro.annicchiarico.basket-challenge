@@ -16,12 +16,12 @@ public class BallController : MonoBehaviour
     [SerializeField] private float resultTimeout = 3f;
     [SerializeField] private float returnDelay = 2f;
     [Header("Swipe Settings")]
-    [SerializeField] private float minSwipeLength = 60f;
-    [SerializeField] private float maxSwipeLength = 450f;
-    [SerializeField] private float minSwipeSpeed = 300f;
-    [SerializeField] private float maxSwipeSpeed = 2000f;
-    [SerializeField] private float minPowerMultiplier = 0.7f;
-    [SerializeField] private float maxPowerMultiplier = 1.3f;
+    [SerializeField] private float minSwipeLength = 40f;
+    [SerializeField] private float maxSwipeLength = 500f;
+    [SerializeField] private float minSwipeSpeed = 200f;
+    [SerializeField] private float maxSwipeSpeed = 2500f;
+    [SerializeField] private float minPowerMultiplier = 0.85f;
+    [SerializeField] private float maxPowerMultiplier = 1.15f;
 
     private Vector3 startPosition;
     private int currentPositionIndex;

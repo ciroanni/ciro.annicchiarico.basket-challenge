@@ -19,6 +19,7 @@ public class FireballController : MonoBehaviour
     private int streakCount;
     private bool isFireballActive;
     private float fireballTimer;
+    private ParticleSystem[] childParticles;
 
     public bool IsFireballActive => isFireballActive;
 
@@ -43,6 +44,9 @@ public class FireballController : MonoBehaviour
         {
             ballRigidbody = GetComponent<Rigidbody>();
         }
+
+        childParticles = GetComponentsInChildren<ParticleSystem>(true);
+        SetParticleSystemsActive(false);
 
         ConfigureSlider();
         UpdateMeter();
@@ -144,6 +148,7 @@ public class FireballController : MonoBehaviour
     {
         isFireballActive = true;
         fireballTimer = Mathf.Max(0f, fireballDuration);
+        SetParticleSystemsActive(true);
         UpdateMeter();
     }
 
@@ -152,7 +157,24 @@ public class FireballController : MonoBehaviour
         isFireballActive = false;
         fireballTimer = 0f;
         streakCount = 0;
+        SetParticleSystemsActive(false);
         UpdateMeter();
+    }
+
+    private void SetParticleSystemsActive(bool isActive)
+    {
+        if (childParticles == null)
+        {
+            return;
+        }
+
+        foreach (ParticleSystem particleSystem in childParticles)
+        {
+            if (particleSystem != null)
+            {
+                particleSystem.gameObject.SetActive(isActive);
+            }
+        }
     }
 
     private void ConfigureSlider()

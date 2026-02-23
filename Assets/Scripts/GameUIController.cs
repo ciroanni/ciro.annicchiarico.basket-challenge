@@ -139,16 +139,31 @@ public class GameUIController : MonoBehaviour
         {
             finalResultText.text = "You Win!";
             finalResultText.color = winColor;
+            finalScoreText.color = winColor;
+            if (finalOpponentScoreText != null)
+            {
+                finalOpponentScoreText.color = loseColor;
+            }
         }
         else if (playerScore < opponentScore)
         {
             finalResultText.text = "You Lose!";
             finalResultText.color = loseColor;
+            finalScoreText.color = loseColor;
+            if (finalOpponentScoreText != null)
+            {
+                finalOpponentScoreText.color = winColor;
+            }
         }
         else
         {
             finalResultText.text = "Draw!";
             finalResultText.color = drawColor;
+            finalScoreText.color = drawColor;
+            if (finalOpponentScoreText != null)
+            {
+                finalOpponentScoreText.color = drawColor;
+            }
         }
     }
 
