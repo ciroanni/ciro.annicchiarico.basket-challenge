@@ -39,8 +39,10 @@ public class BallController : MonoBehaviour
     public float MaxSwipeSpeed => maxSwipeSpeed;
     public event Action OnShotLaunched;
     public event Action OnShotResolved;
+    public event Action OnShotMissed;
     public event Action OnResetBall; // to notify camera to start following 
     public event Action StopFollowing; // to notify camera to stop following to avoid visual bug
+    public event Action OnPlayerTeleported; // notify camera after player snap to new position
 
     private void Awake()
     {
@@ -143,6 +145,7 @@ public class BallController : MonoBehaviour
         OnResetBall?.Invoke();
         AdvancePosition();
         MovePlayerToCurrentPosition();
+        OnPlayerTeleported?.Invoke();
         AttachToHand();
     }
 
@@ -191,6 +194,7 @@ public class BallController : MonoBehaviour
             AdvancePosition();
         }
         MovePlayerToCurrentPosition();
+        OnPlayerTeleported?.Invoke();
         AttachToHand();
         returnCoroutine = null;
     }
@@ -307,6 +311,10 @@ public class BallController : MonoBehaviour
         }
 
         awaitingResult = false;
+        if (!scoredThisShot)
+        {
+            OnShotMissed?.Invoke();
+        }
         OnShotResolved?.Invoke();
         if (resultCoroutine != null)
         {

@@ -22,7 +22,7 @@ public class TrajectoryCalculator : MonoBehaviour
         {
             case ShotType.Perfect:
                 bool useBackboard = Random.value > 0.5f; // randomly decide to use backboard or not
-                Debug.Log(useBackboard ? "Perfect shot using backboard!" : "Perfect shot directly to hoop!");
+                // Debug.Log(useBackboard ? "Perfect shot using backboard!" : "Perfect shot directly to hoop!");
                 targetPoint = useBackboard ? backboardCenter.position : hoopCenter.position;
                 break;
             case ShotType.NotPerfect:

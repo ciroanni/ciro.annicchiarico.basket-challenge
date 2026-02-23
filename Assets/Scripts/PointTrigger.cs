@@ -39,10 +39,19 @@ public class PointTrigger : MonoBehaviour
 
                 scoredBodies.Add(rb);
                 ShotEvaluator.ShotResult result = shotEvaluator.Evaluate(shotType);
-                Debug.Log($"Shot scored! Type: {shotType}, Points: {result.Points}");
+                int points = result.Points;
                 ShotContext.ShooterType shooter = shotContext != null ? shotContext.Shooter : ShotContext.ShooterType.Player;
-                ScoreManager.Instance?.AddPoints(shooter, result.Points);
-                OnShotScoredResult?.Invoke(result, shooter);
+                FireballController fireball = rb.GetComponent<FireballController>();
+                if (fireball != null)
+                {
+                    int multiplier = fireball.GetScoreMultiplier();
+                    points *= Mathf.Max(1, multiplier);
+                }
+
+                ShotEvaluator.ShotResult finalResult = new ShotEvaluator.ShotResult(points, result.Label);
+                Debug.Log($"Shot scored! Type: {shotType}, Points: {finalResult.Points}");
+                ScoreManager.Instance?.AddPoints(shooter, finalResult.Points);
+                OnShotScoredResult?.Invoke(finalResult, shooter);
 
                 if (shotContext != null && shotContext.TouchedBackboard && backboardBonus != null)
                 {
